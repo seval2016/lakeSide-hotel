@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "t_room")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,7 +15,7 @@ import java.util.List;
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "room_type", nullable = false)
@@ -28,6 +27,15 @@ public class Room {
     @Column(name = "is_booked")
     private boolean isBooked = false;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BookedRoom> bookings = new ArrayList<>();
+
+
+    public void addBooking(BookedRoom booking){
+        if(bookings== null){
+            bookings=new ArrayList<>();
+        }
+        bookings.add(booking);
+        booking.setRoom(this);
+    }
 }
