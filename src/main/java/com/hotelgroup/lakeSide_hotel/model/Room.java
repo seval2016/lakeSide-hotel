@@ -14,67 +14,65 @@ import java.util.UUID;
 /**
  * Represents a hotel room entity.
  */
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor(force = true) // JPA için gerekli varsayılan constructor
-@Builder(toBuilder = true)
+@Entity // Bu sınıfın bir JPA Entity sınıfı olduğunu belirtir.
+@Getter // Lombok anotasyonu, getter metodlarını otomatik olarak oluşturur.
+@Setter // Lombok anotasyonu, setter metodlarını otomatik olarak oluşturur.
+@AllArgsConstructor // Tüm alanları içeren bir constructor oluşturur.
+@NoArgsConstructor(force = true) // Varsayılan bir constructor oluşturur. JPA için gereklidir.
+@Builder(toBuilder = true) // Builder pattern'ini sağlar, nesne oluşturmayı kolaylaştırır.
 public class Room {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Bu alanın birincil anahtar olduğunu belirtir.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID'nin otomatik olarak arttırılacağını belirtir.
     private Long id;
 
-    @Column(name = "room_type", nullable = false)
-    @NonNull
+    @Column(name = "room_type", nullable = false) // Bu alanın veritabanı kolonunu belirtir.
+    @NonNull // Bu alanın null olamayacağını belirtir.
     private String roomType;
 
-    @Column(name = "room_price", nullable = false)
-    @NonNull
+    @Column(name = "room_price", nullable = false) // Oda fiyatı için veri tabanı kolonunu belirtir.
+    @NonNull // Bu alanın null olamayacağını belirtir.
     private BigDecimal roomPrice;
 
-    @Column(name = "is_booked", nullable = false)
+    @Column(name = "is_booked", nullable = false) // Odanın rezervasyon durumunu belirtir.
     private boolean isBooked = false;
 
-    @Lob
-    private Blob photo;
+    @Lob // Veritabanında büyük veri tipleri (blob) için kullanılır.
+    private Blob photo; // Oda fotoğrafını saklar.
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookedRoom> bookings;
+    private List<BookedRoom> bookings = new ArrayList<>(); // Oda ile ilişkili rezervasyonları tutar.
 
-    public Room() {
-        this.bookings = new ArrayList<>();
-    }
-
+    // Rezervasyon eklemek için yardımcı metot
     public void addBooking(BookedRoom booking) {
         if (bookings == null) {
             bookings = new ArrayList<>();
         }
-        bookings.add(booking);
-        booking.setRoom(this);
-        isBooked = true;
+        bookings.add(booking); // Rezervasyonu listeye ekler.
+        booking.setRoom(this); // Odanın rezervasyonla ilişkilendirilmesini sağlar.
+        isBooked = true; // Odanın rezerve olduğunu belirtir.
         if (booking.getBookingConfirmationCode() == null || booking.getBookingConfirmationCode().isEmpty()) {
-            booking.setBookingConfirmationCode(UUID.randomUUID().toString());
-            // UUID'yi burada da ekleyebilirsiniz.
+            booking.setBookingConfirmationCode(UUID.randomUUID().toString()); // UUID ile rezervasyon onay kodu oluşturur.
         }
     }
 
+    // Rezervasyon kaldırmak için yardımcı metot
     public void removeBooking(BookedRoom booking) {
         if (bookings != null && bookings.contains(booking)) {
-            bookings.remove(booking);
-            booking.setRoom(null);
+            bookings.remove(booking); // Rezervasyonu listeden çıkarır.
+            booking.setRoom(null); // Odanın rezervasyonla ilişkisiz kalmasını sağlar.
         }
     }
 
-    public void addBookings(BookedRoom booking){
-        if(bookings == null){
+    // Birden fazla rezervasyon eklemek için metot
+    public void addBookings(BookedRoom booking) {
+        if (bookings == null) {
             bookings = new ArrayList<>();
         }
-        bookings.add(booking);
-        booking.setRoom(this);
-        isBooked = true;
-        String bookingCode = RandomStringUtils.randomNumeric(10);
+        bookings.add(booking); // Rezervasyonu ekler.
+        booking.setRoom(this); // Odanın rezervasyonla ilişkilendirilmesini sağlar.
+        isBooked = true; // Odanın rezerve olduğunu belirtir.
+        String bookingCode = RandomStringUtils.randomNumeric(10); // Rezervasyon kodu oluşturur.
         booking.setBookingConfirmationCode(bookingCode);
     }
 }
