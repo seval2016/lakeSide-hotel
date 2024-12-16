@@ -2,6 +2,7 @@ package com.hotelgroup.lakeSide_hotel.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -40,7 +41,11 @@ public class Room {
     private Blob photo;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookedRoom> bookings = new ArrayList<>();
+    private List<BookedRoom> bookings;
+
+    public Room() {
+        this.bookings = new ArrayList<>();
+    }
 
     public void addBooking(BookedRoom booking) {
         if (bookings == null) {
@@ -50,7 +55,8 @@ public class Room {
         booking.setRoom(this);
         isBooked = true;
         if (booking.getBookingConfirmationCode() == null || booking.getBookingConfirmationCode().isEmpty()) {
-            booking.setBookingConfirmationCode(UUID.randomUUID().toString()); // UUID'yi burada da ekleyebilirsiniz.
+            booking.setBookingConfirmationCode(UUID.randomUUID().toString());
+            // UUID'yi burada da ekleyebilirsiniz.
         }
     }
 
@@ -61,5 +67,14 @@ public class Room {
         }
     }
 
-
+    public void addBookings(BookedRoom booking){
+        if(bookings == null){
+            bookings = new ArrayList<>();
+        }
+        bookings.add(booking);
+        booking.setRoom(this);
+        isBooked = true;
+        String bookingCode = RandomStringUtils.randomNumeric(10);
+        booking.setBookingConfirmationCode(bookingCode);
+    }
 }

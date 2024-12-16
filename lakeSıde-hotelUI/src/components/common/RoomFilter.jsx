@@ -2,47 +2,63 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react"
 
+// RoomFilter bileşeni, data ve setFilteredData propslarını alır. 
+// data: Tüm odaların listesini içerir.
+// setFilteredData: Filtrelenen odaların listesini ayarlamak için kullanılır.
 const RoomFilter = ({ data, setFilteredData }) => {
-	const [filter, setFilter] = useState("")
+  // filter: Kullanıcının seçtiği filtreyi tutan state.
+  const [filter, setFilter] = useState("")
 
-	const handleSelectChange = (e) => {
-		const selectedType = e.target.value
-		setFilter(selectedType)
+  // Kullanıcı bir filtre seçtiğinde tetiklenir.
+  const handleSelectChange = (e) => {
+    const selectedType = e.target.value // Seçilen oda türü alınır.
+    setFilter(selectedType) // filter state'i güncellenir.
 
-		const filteredRooms = data.filter((room) =>
-			room.roomType.toLowerCase().includes(selectedType.toLowerCase())
-		)
-		setFilteredData(filteredRooms)
-	}
+    // Seçilen türe göre odalar filtrelenir.
+    const filteredRooms = data.filter((room) =>
+      room.roomType.toLowerCase().includes(selectedType.toLowerCase())
+    )
+    setFilteredData(filteredRooms) // Filtrelenmiş oda verisi gönderilir.
+  }
 
-	const clearFilter = () => {
-		setFilter("")
-		setFilteredData(data)
-	}
+  // Filtreyi temizlemek için kullanılır.
+  const clearFilter = () => {
+    setFilter("") // Filtreleme state'i sıfırlanır.
+    setFilteredData(data) // Tüm odalar gösterilir.
+  }
 
-	const roomTypes = ["", ...new Set(data.map((room) => room.roomType))]
+  // Mevcut oda türlerini çıkarır ve filtreleme seçenekleri için bir liste oluşturur.
+  const roomTypes = ["", ...new Set(data.map((room) => room.roomType))]
 
-	return (
-		<div className="input-group mb-3">
-			<span className="input-group-text" id="room-type-filter">
-				FIlter rooms by type
-			</span>
-			<select
-				className="form-select"
-				aria-label="romm type filter"
-				value={filter}
-				onChange={handleSelectChange}>
-				<option value="">select a room type to filter....</option>
-				{roomTypes.map((type, index) => (
-					<option key={index} value={String(type)}>
-						{String(type)}
-					</option>
-				))}
-			</select>
-			<button className="btn btn-hotel" type="button" onClick={clearFilter}>
-				Clear Filter
-			</button>
-		</div>
-	)
+  // Bileşenin kullanıcıya gösterilen kısmı (UI).
+  return (
+    <div className="input-group mb-3">
+      {/* Kullanıcıya filtreleme özelliğini açıklayan etiket */}
+      <span className="input-group-text" id="room-type-filter">
+        Filter rooms by type
+      </span>
+
+      {/* Oda türlerini seçmek için bir dropdown */}
+      <select
+        className="form-select"
+        aria-label="room type filter"
+        value={filter} // Seçili filtre
+        onChange={handleSelectChange} // Değişiklik olduğunda tetiklenen fonksiyon
+      >
+        <option value="">Select a room type to filter...</option>
+        {roomTypes.map((type, index) => (
+          <option key={index} value={String(type)}>
+            {String(type)} {/* Her oda türünü seçenek olarak listeye ekler */}
+          </option>
+        ))}
+      </select>
+
+      {/* Filtreyi temizlemek için bir düğme */}
+      <button className="btn btn-hotel" type="button" onClick={clearFilter}>
+        Clear Filter
+      </button>
+    </div>
+  )
 }
+
 export default RoomFilter
