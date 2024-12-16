@@ -34,7 +34,7 @@ export async function name(photo,roomType,roomPrice) {
      */
 
     const response= await api.post("/rooms/add/new-room",formData)
-    if(response.status ===201){
+    if(response.status === 201){
         return true
     }else{
         return false
