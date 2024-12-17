@@ -35,7 +35,6 @@ public class RoomController {
 
     private final IRoomService roomService; // IRoomService servisi dependency injection ile alınır.
     private final IBookingService bookingService; // IBookingService servisi dependency injection ile alınır.
-
     @PostMapping("/add/new-room") // Yeni bir oda eklemek için HTTP POST metodunu kullanır.
     @PreAuthorize("hasRole('ROLE_ADMIN')") // Yalnızca adminlerin bu metodu çalıştırmasına izin verir.
     public ResponseEntity<Room> addNewRoom(
