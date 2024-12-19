@@ -5,16 +5,33 @@ spring:
   datasource:
     username: root
     password: 12345
-    url: jdbc:mysql://localhost:3306/lakeside_hotel_db
+    url: jdbc:mysql://localhost:3306/lakeSide_hotel_db
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     show-sql: true
-    hibernate:
-      ddl-auto: update
-      format-sql: true
+    ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
 
   servlet:
     multipart:
-      max-file-size: 10MB  # Dosya boyutunu art?rd?m
-      max-request-size: 10MB # Yükleme s?n?r?n? dosya boyutuna göre art?rd?m
+      max-file-size: 500KB
+      max-request-size: 500KB
+
+  logging:
+    file:
+      name: log/lakesidehotelapp.log
+    pattern:
+      file: "%d %-5level [%thread] %logger:%msg%n"
+    level:
+      org.springframework.web: WARN
+      org.hibernate: INFO
+      com.project: INFO
+
+auth:
+  token:
+    expirationInMils: 3600000
+    jwtSecret: lakesidehotelproject
