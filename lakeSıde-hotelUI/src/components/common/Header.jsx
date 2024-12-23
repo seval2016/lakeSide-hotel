@@ -1,10 +1,15 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react'
+import React from "react"
 
-export default function Header() {
-  return (
-    <div>
-      
-    </div>
-  )
+const Header = ({ title }) => {
+	return (
+		<header className="header">
+			<div className="overlay"></div>
+			<div className="container">
+				<h1 className="header-title text-center">{title}</h1>
+			</div>
+		</header>
+	)
 }
+
+export default Header

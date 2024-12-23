@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios"; // Axios kütüphanesi, HTTP istekleri yapmak için kullanılıyor.
 
+
 export const api = axios.create({
     baseURL: "http://localhost:9192"
 });
